@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { Cheapest } from "./components/List/Cheapest";
+import { List } from "./components/List/List";
+import { Blackout } from "./components/Modal/Blackout";
+import { Modal } from "./components/Modal/Modal";
+import { useAppDispatch } from "./reducer/hooks";
+import { fetchProducts } from "./reducer/productSlice";
+import "./style.css";
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Blackout></Blackout>
+      <List></List>
+      <Cheapest></Cheapest>
+      <Modal></Modal>
     </div>
   );
 }
 
-export default App;
+export { App };
