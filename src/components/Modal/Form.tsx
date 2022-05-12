@@ -1,7 +1,7 @@
 /* eslint-disable use-isnan */
 /* eslint-disable eqeqeq */
 import React, { FormEventHandler, useState } from "react";
-import { changeName, changePhone } from "../../reducer/formSlice";
+import { changeName, changePhone, checkStatus } from "../../reducer/formSlice";
 import { useAppDispatch, useAppSelector } from "../../reducer/hooks";
 
 function Form() {
@@ -15,30 +15,35 @@ function Form() {
     if (typeof data.name === "string" && typeof data.phone === "string") {
       console.log(data);
     }
-    if (data.phone.length === 0) {
+    if (data.phone?.length === 0) {
       dispatch(changePhone(""));
     }
 
-    if (data.name.length === 0) {
+    if (data.name?.length === 0) {
       dispatch(changeName(""));
     }
   };
 
+  function onBlur(method: any, value: string) {
+    dispatch(method(value));
+    dispatch(checkStatus());
+  }
+
   const onNameChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     newInputName(e.target.value);
-    dispatch(changeName(e.target.value));
+    dispatch(changeName("pending"));
   };
 
   const onPhoneChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     newInputPhone(e.target.value);
-    dispatch(changePhone(e.target.value));
+    dispatch(changePhone("1111111"));
   };
 
   return (
     <form className="modal__form" onSubmit={onSubmit}>
       <label
         className={
-          typeof data.name == "string"
+          typeof data.name == "string" || typeof data.name == "number"
             ? "modal__label"
             : "modal__label no-valid"
         }
@@ -47,6 +52,7 @@ function Form() {
           className={"modal__input"}
           placeholder="Name"
           value={inputName}
+          onBlur={() => onBlur(changeName, inputName)}
           onChange={onNameChange}
           type="text"
         />
@@ -57,7 +63,7 @@ function Form() {
       </label>
       <label
         className={
-          typeof data.phone == "string"
+          typeof data.phone == "string" || typeof data.phone == "number"
             ? "modal__label"
             : "modal__label no-valid"
         }
@@ -65,6 +71,7 @@ function Form() {
         <input
           placeholder="Number"
           value={inputPhone}
+          onBlur={() => onBlur(changePhone, inputPhone)}
           onChange={onPhoneChange}
           className={"modal__input"}
           type="text"
@@ -78,11 +85,7 @@ function Form() {
       <button
         className="modal__submit"
         type="submit"
-        disabled={
-          typeof data.name === "string" && typeof data.phone === "string"
-            ? false
-            : true
-        }
+        disabled={data.status ? false : true}
       >
         ORDER
       </button>

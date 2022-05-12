@@ -6,6 +6,7 @@ type Data = {
   data: {
     name: any;
     phone: any;
+    status: boolean;
   };
 };
 
@@ -14,8 +15,9 @@ const validPhone = /^([+]?[0-9\s-\(\)]{3,25})*$/i;
 
 const initialState: Data = {
   data: {
-    name: NaN,
-    phone: NaN,
+    name: 0,
+    phone: 0,
+    status: false,
   },
 };
 
@@ -37,7 +39,7 @@ export const dataSlice = createSlice({
       state.data.phone = action.payload;
       if (!validate(validPhone, action.payload)) {
         state.data.phone = false;
-      } else if (action.payload.length > 13) {
+      } else if (action.payload?.length > 13) {
         state.data.phone = undefined;
       }
 
@@ -45,9 +47,17 @@ export const dataSlice = createSlice({
         state.data.phone = null;
       }
     },
+    checkStatus(state) {
+      if (
+        typeof state.data.name === "string" &&
+        typeof state.data.phone === "string"
+      ) {
+        state.data.status = true;
+      }
+    },
   },
 });
 
-export const { changeName, changePhone } = dataSlice.actions;
+export const { changeName, changePhone, checkStatus } = dataSlice.actions;
 
 export default dataSlice.reducer;
