@@ -6,8 +6,9 @@ type Data = {
   data: {
     name: any;
     phone: any;
-    status: boolean;
   };
+
+  status: boolean;
 };
 
 const validName = /^([а-яё]+|[a-z]+)$/i;
@@ -17,8 +18,8 @@ const initialState: Data = {
   data: {
     name: 0,
     phone: 0,
-    status: false,
   },
+  status: false,
 };
 
 export const dataSlice = createSlice({
@@ -52,7 +53,7 @@ export const dataSlice = createSlice({
         typeof state.data.name === "string" &&
         typeof state.data.phone === "string"
       ) {
-        state.data.status = true;
+        state.status = true;
       }
     },
   },

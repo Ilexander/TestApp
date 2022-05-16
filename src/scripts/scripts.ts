@@ -1,4 +1,4 @@
-function arrayMin(arr: object[]) {
+function arrayMin(arr: any[]) {
   return arr.reduce(function (p, v) {
     return Object.assign({}, p < v ? p : v);
   });

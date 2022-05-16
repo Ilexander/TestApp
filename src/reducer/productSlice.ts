@@ -1,50 +1,53 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { arrayMin } from "../scripts/scripts";
 
-export const fetchProducts = createAsyncThunk(
+type Products = {
+  price: string;
+  category: string;
+  name: string;
+};
+
+export const fetchProducts = createAsyncThunk<Products[]>(
   "products/fetchProducts",
   async function () {
-    try {
-      const resp = await fetch(
-        "https://run.mocky.io/v3/b7d36eea-0b3f-414a-ba44-711b5f5e528e"
-      );
-
-      const data = await resp.json();
-      return data;
-    } catch (error) {}
+    const resp = await fetch(
+      "https://run.mocky.io/v3/b7d36eea-0b3f-414a-ba44-711b5f5e528e"
+    );
+    const data = await resp.json();
+    return data;
   }
 );
 
-type CounterState = {
-  products: any;
-  currentProduct: any;
+type ProductState = {
+  products: Products[];
+  currentProduct: Products[];
 };
 
-const initialState: CounterState = {
+const initialState: ProductState = {
   products: [],
   currentProduct: [],
 };
 
 export const productSlice = createSlice({
-  name: "counter",
+  name: "product",
   initialState,
   reducers: {
     getMinPrice(state) {
       state.currentProduct = [arrayMin(state.products)];
     },
-    getCurrentProduct(state, action) {
-      state.currentProduct = state.products.filter((item: any) => {
+    getCurrentProduct(state, action: PayloadAction<string>) {
+      state.currentProduct = state.products.filter((item) => {
         return item.name === action.payload;
       });
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProducts.fulfilled, (state, action) => {
-      state.products = state.products.concat(action.payload);
-    });
-    builder.addCase(fetchProducts.rejected, (state, action) => {
-      state.products = action.payload;
-    });
+    builder.addCase(
+      fetchProducts.fulfilled,
+      (state, action: PayloadAction<Products[]>) => {
+        state.products = state.products.concat(action.payload);
+      }
+    );
   },
 });
 

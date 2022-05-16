@@ -8,7 +8,7 @@ function Form() {
   const [inputName, newInputName] = useState("");
   const [inputPhone, newInputPhone] = useState("");
   const dispatch = useAppDispatch();
-  const data = useAppSelector((state) => state.data.data);
+  const {data, status} = useAppSelector((state) => state.data);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -85,7 +85,7 @@ function Form() {
       <button
         className="modal__submit"
         type="submit"
-        disabled={data.status ? false : true}
+        disabled={status ? false : true}
       >
         ORDER
       </button>
